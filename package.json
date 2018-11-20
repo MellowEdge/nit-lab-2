@@ -4,11 +4,16 @@
   "description": "my shop",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"build": "webpack"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "npm": "^6.4.1"
+  },
+  "devDependencies": {
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2"
   }
 }
