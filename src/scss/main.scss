@@ -1,7 +1,27 @@
-$font-stack:    Helvetica, sans-serif;
-$primary-color: #333;
+* {
+  &, &:before, &:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
 
-body {
-  font: 100% $font-stack;
-  color: $primary-color;
+html {
+  font-family: Arial, sans-serif;
+}
+
+@import "~bootstrap/scss/bootstrap";
+
+.product-image {
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.product-description{
+  max-height: 200px;
+  overflow: auto;
+}
+
+.product-discounted-price{
+  text-decoration: line-through;
 }

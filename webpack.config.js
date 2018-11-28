@@ -7,6 +7,7 @@ module.exports = {
         path: path.resolve(__dirname, 'docs'),
         filename: 'js/main.js',
     },
+    watch: true,
 	module: {
         rules: [
             {
