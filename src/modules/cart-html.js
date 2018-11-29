@@ -9,62 +9,68 @@ export const _makeCart = () => {
         $('.show-cart').css("display", "block");
         mainPageView();
     });
-    $cart.append($(`<div class="products-in-cart">`));
-    let $products = $cart.find(".products-in-cart");
-    for (var i = 0; i < localStorage.length; i++){
-        var currentKey = localStorage.key(i);
-        var currentId = parseInt(currentKey.slice(9,-1), 10);
-        var currentItem = localStorage.getItem(currentKey);
-        getProduct(currentId, currentItem, $products);
-
+    if (localStorage.length === 0){
+        $cart.append($(`<span class="empty-cart-message">`).text("The cart is empty at the moment."));
     }
-    $cart.append($(`<form id="cart-form" class="cart-form">`));
-    let $form = $cart.find("#cart-form");
-    var $nameInput = $(`<div class="cart-input">`);
-    $nameInput.append($(`<label class="cart-input-label">`).text('Enter name: '));
-    $nameInput.append($(`<input type="text" class="cart-form-input" id="form-name" required>`));
-    $form.append($nameInput);
-    var $phoneInput = $(`<div class="cart-input">`);
-    $phoneInput.append($(`<label class="cart-input-label">`).text('Enter phone number: '));
-    $phoneInput.append($(`<input type="number" class="cart-form-input" id="form-number" required>`));
-    $form.append($phoneInput);
-    var $emailInput = $(`<div class="cart-input">`);
-    $emailInput.append($(`<label class="cart-input-label">`).text('Enter e-mail: '));
-    $emailInput.append($(`<input type="email" class="cart-form-input" id="form-email" required>`));
-    $form.append($emailInput);
-    $form.append($(`<button type="submit" id="cart-form-submit" class="checkout-button">`).text('Checkout'));
-    $form.submit(function(e) {
+    else {
+        $cart.append($(`<div class="products-in-cart">`));
+        let $products = $cart.find(".products-in-cart");
+        for (var i = 0; i < localStorage.length; i++) {
+            var currentKey = localStorage.key(i);
+            var currentId = parseInt(currentKey.slice(9, -1), 10);
+            var currentItem = localStorage.getItem(currentKey);
+            getProduct(currentId, currentItem, $products);
 
-        e.preventDefault();
-
-        var form = $form;
-        var name = form.find('#form-name').val();
-        var phone = form.find('#form-number').val();
-        var email = form.find('#form-email').val();
-        var productList = '';
-        for (var i = 0; i < localStorage.length; i++){
-            productList += localStorage.key(i) + '=' + localStorage.getItem(localStorage.key(i))+'&';
         }
-        var token = 'rn7YVoZGF-ds_TeeXMdD';
-        $.ajax({
-            type: "POST",
-            url: 'https://nit.tron.net.ua/api/order/add',
-            data: 'name='+name+'&phone='+phone+'&email='+email+'&'+productList+'token='+token, // serializes the form's elements.
-            success: function(data)
-            {
-                if (data.status === 'error')
-                    alert("The cart is empty!"); // show response from the php script.
-                else{
-                    $products.empty();
-                    localStorage.clear();
-                    alert("Bought succesfully!");
-                }
-            },
-            error: function(xhr){
-                console.log("An error occured: " + xhr.status + " " + xhr.statusText);
-            },
+        $cart.append($(`<form id="cart-form" class="cart-form">`));
+        let $form = $cart.find("#cart-form");
+        var $nameInput = $(`<div class="cart-input">`);
+        $nameInput.append($(`<label class="cart-input-label">`).text('Enter name: '));
+        $nameInput.append($(`<input type="text" class="cart-form-input" id="form-name" required>`));
+        $form.append($nameInput);
+        var $phoneInput = $(`<div class="cart-input">`);
+        $phoneInput.append($(`<label class="cart-input-label">`).text('Enter phone number: '));
+        $phoneInput.append($(`<input type="number" class="cart-form-input" id="form-number" required>`));
+        $form.append($phoneInput);
+        var $emailInput = $(`<div class="cart-input">`);
+        $emailInput.append($(`<label class="cart-input-label">`).text('Enter e-mail: '));
+        $emailInput.append($(`<input type="email" class="cart-form-input" id="form-email" required>`));
+        $form.append($emailInput);
+        $form.append($(`<button type="submit" id="cart-form-submit" class="checkout-button">`).text('Checkout'));
+        $form.submit(function (e) {
+
+            e.preventDefault();
+
+            var form = $form;
+            var name = form.find('#form-name').val();
+            var phone = form.find('#form-number').val();
+            var email = form.find('#form-email').val();
+            var productList = '';
+            for (var i = 0; i < localStorage.length; i++) {
+                productList += localStorage.key(i) + '=' + localStorage.getItem(localStorage.key(i)) + '&';
+            }
+            var token = 'rn7YVoZGF-ds_TeeXMdD';
+            $.ajax({
+                type: "POST",
+                url: 'https://nit.tron.net.ua/api/order/add',
+                data: 'name=' + name + '&phone=' + phone + '&email=' + email + '&' + productList + 'token=' + token, // serializes the form's elements.
+                success: function (data) {
+                    if (data.status === 'error')
+                        alert("The cart is empty!"); // show response from the php script.
+                    else {
+                        $products.empty();
+                        localStorage.clear();
+                        $('.product-container').empty();
+                        $('.product-container').append(_makeCart());
+                        alert("Bought succesfully!");
+                    }
+                },
+                error: function (xhr) {
+                    console.log("An error occured: " + xhr.status + " " + xhr.statusText);
+                },
+            });
         });
-    });
+    }
     return $cart;
 };
 
@@ -109,6 +115,10 @@ function getProduct(currentId, currentItem, $products){
             $cartRightHand.find("#remove-from-cart-"+currentId).click(function(){
                 localStorage.removeItem('products['+currentId+']');
                 $thisProduct.remove();
+                if (localStorage.length === 0){
+                    $('.product-container').empty();
+                    $('.product-container').append(_makeCart());
+                }
             })
 
         },
