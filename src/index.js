@@ -30,14 +30,14 @@ export const mainPageView = function() {
         method: 'get',
         dataType: 'json',
         success: function (json) {
-            console.log('Loaded via AJAX!');
+            // console.log('Loaded via AJAX!');
             // console.log(json);
-            console.table(json);
+            // console.table(json);
             $('.categories').css("display","block");
             var productContainer = $('.product-container');
             productContainer.empty();
             json.forEach(product => productContainer.append(_makeShop(product, 0, 0)));
-            console.log('Added to grid');
+            // console.log('Added to grid');
         },
         error: function (xhr) {
             alert("An error occured: " + xhr.status + " " + xhr.statusText);
@@ -51,14 +51,14 @@ export const categoryPageView = function(id) {
         method: 'get',
         dataType: 'json',
         success: function (json) {
-            console.log('Loaded via AJAX!');
+            // console.log('Loaded via AJAX!');
             // console.log(json);
-            console.table(json);
+            // console.table(json);
             $('.categories').css("display","block");
             var productContainer = $('.product-container');
             productContainer.empty();
             json.forEach(product => productContainer.append(_makeShop(product, 1, id)));
-            console.log('Added to grid');
+            // console.log('Added to grid');
         },
         error: function (xhr) {
             alert("An error occured: " + xhr.status + " " + xhr.statusText);
@@ -73,13 +73,13 @@ export const singleView = function(product_id, mode, categoryId){
         method: 'get',
         dataType: 'json',
         success: function(json){
-            console.log('Loaded via AJAX!');
-            console.log(json);
+            // console.log('Loaded via AJAX!');
+            // console.log(json);
             $('.categories').css("display","none");
             var productContainer = $('.product-container');
             productContainer.empty();
             productContainer.append(_makeProductPage(json, mode, categoryId));
-            console.log('Added to page');
+            // console.log('Added to page');
         },
         error: function(xhr){
             alert("An error occured: " + xhr.status + " " + xhr.statusText);
@@ -93,13 +93,13 @@ const categories = function(){
         method: 'get',
         dataType: 'json',
         success: function(json){
-            console.log('Loaded via AJAX!');
-            console.log(json);
+            // console.log('Loaded via AJAX!');
+            // console.log(json);
             var categoryContainer = $('.categories');
             categoryContainer.empty();
             categoryContainer.append(_allProducts());
             json.forEach(category => categoryContainer.append(_makeCategories(category)));
-            console.log('Added categories');
+            // console.log('Added categories');
         },
         error: function(xhr){
             alert("An error occured: " + xhr.status + " " + xhr.statusText);

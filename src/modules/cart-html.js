@@ -92,8 +92,8 @@ function getProduct(currentId, currentItem, $products){
         method: 'get',
         dataType: 'json',
         success: function(json){
-            console.log('Loaded via AJAX!');
-            console.log(json);
+            // console.log('Loaded via AJAX!');
+            // console.log(json);
             $products.append($(`<div id="product-${currentId}" class="cart-item-container">`));
             var $thisProduct = $products.find("#product-"+currentId);
             $thisProduct.append($(`<img src="${json.image_url}" alt="${json.name}" class="product-image cart-item-image" >`));
