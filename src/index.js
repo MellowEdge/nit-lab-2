@@ -16,6 +16,8 @@ $( document ).ready(function() {
     mainPageView();
     categories();
     $(document).find('#show-cart').click(function(){
+        $('.categories').css("display","none");
+        $('.show-cart').css("display", "none");
         var productContainer = $('.product-container');
         productContainer.empty();
         productContainer.append(_makeCart());
@@ -31,9 +33,10 @@ export const mainPageView = function() {
             console.log('Loaded via AJAX!');
             // console.log(json);
             console.table(json);
+            $('.categories').css("display","block");
             var productContainer = $('.product-container');
             productContainer.empty();
-            json.forEach(product => productContainer.append(_makeShop(product)));
+            json.forEach(product => productContainer.append(_makeShop(product, 0, 0)));
             console.log('Added to grid');
         },
         error: function (xhr) {
@@ -51,9 +54,10 @@ export const categoryPageView = function(id) {
             console.log('Loaded via AJAX!');
             // console.log(json);
             console.table(json);
+            $('.categories').css("display","block");
             var productContainer = $('.product-container');
             productContainer.empty();
-            json.forEach(product => productContainer.append(_makeShop(product)));
+            json.forEach(product => productContainer.append(_makeShop(product, 1, id)));
             console.log('Added to grid');
         },
         error: function (xhr) {
@@ -63,7 +67,7 @@ export const categoryPageView = function(id) {
 };
 
 
-export const singleView = function(product_id){
+export const singleView = function(product_id, mode, categoryId){
     jQuery.ajax({
         url: 'https://nit.tron.net.ua/api/product/'+product_id,
         method: 'get',
@@ -71,9 +75,10 @@ export const singleView = function(product_id){
         success: function(json){
             console.log('Loaded via AJAX!');
             console.log(json);
+            $('.categories').css("display","none");
             var productContainer = $('.product-container');
             productContainer.empty();
-            productContainer.append(_makeProductPage(json));
+            productContainer.append(_makeProductPage(json, mode, categoryId));
             console.log('Added to page');
         },
         error: function(xhr){

@@ -3,9 +3,10 @@ import {_makeProductPage} from "./this-product-html";
 import {mainPageView, singleView} from "../index";
 
 export const _makeCart = () => {
-    let $cart = $(`<div class="cart">`);
-    $cart.append($(`<button id="back-from-cart">`).text("Back"));
+    let $cart = $(`<div class="cart container">`);
+    $cart.append($(`<button id="back-from-cart" class="back-button">`).text("Back to main page"));
     $cart.find("#back-from-cart").click(function(){
+        $('.show-cart').css("display", "block");
         mainPageView();
     });
     $cart.append($(`<div class="products-in-cart">`));
@@ -17,15 +18,21 @@ export const _makeCart = () => {
         getProduct(currentId, currentItem, $products);
 
     }
-    $cart.append($(`<form id="cart-form">`));
+    $cart.append($(`<form id="cart-form" class="cart-form">`));
     let $form = $cart.find("#cart-form");
-    $form.append($(`<label>`).text('Enter name: '));
-    $form.append($(`<input type="text" class="cart-form-input" id="form-name" required>`));
-    $form.append($(`<label>`).text('Enter phone number: '));
-    $form.append($(`<input type="number" class="cart-form-input" id="form-number" required>`));
-    $form.append($(`<label>`).text('Enter e-mail: '));
-    $form.append($(`<input type="email" class="cart-form-input" id="form-email" required>`));
-    $form.append($(`<button type="submit" id="cart-form-submit">`).text('Checkout'));
+    var $nameInput = $(`<div class="cart-input">`);
+    $nameInput.append($(`<label class="cart-input-label">`).text('Enter name: '));
+    $nameInput.append($(`<input type="text" class="cart-form-input" id="form-name" required>`));
+    $form.append($nameInput);
+    var $phoneInput = $(`<div class="cart-input">`);
+    $phoneInput.append($(`<label class="cart-input-label">`).text('Enter phone number: '));
+    $phoneInput.append($(`<input type="number" class="cart-form-input" id="form-number" required>`));
+    $form.append($phoneInput);
+    var $emailInput = $(`<div class="cart-input">`);
+    $emailInput.append($(`<label class="cart-input-label">`).text('Enter e-mail: '));
+    $emailInput.append($(`<input type="email" class="cart-form-input" id="form-email" required>`));
+    $form.append($emailInput);
+    $form.append($(`<button type="submit" id="cart-form-submit" class="checkout-button">`).text('Checkout'));
     $form.submit(function(e) {
 
         e.preventDefault();
@@ -81,21 +88,25 @@ function getProduct(currentId, currentItem, $products){
         success: function(json){
             console.log('Loaded via AJAX!');
             console.log(json);
-            $products.append($(`<div id="product-${currentId}">`));
+            $products.append($(`<div id="product-${currentId}" class="cart-item-container">`));
             var $thisProduct = $products.find("#product-"+currentId);
-            $thisProduct.append($(`<img src="${json.image_url}" alt="${json.name}" class="product-image" >`));
-            $thisProduct.append($(`<span class="product-title">`).text(json.name));
-            $thisProduct.append($(`<button id="decrease-count-${currentId}">`).text('-'));
-            $thisProduct.find("#decrease-count-"+currentId).click(function(){
+            $thisProduct.append($(`<img src="${json.image_url}" alt="${json.name}" class="product-image cart-item-image" >`));
+            $thisProduct.append($(`<div id="cart-righthand-${currentId}" class="cart-righthand">`));
+            var $cartRightHand = $thisProduct.find("#cart-righthand-"+currentId);
+            $cartRightHand.append($(`<span class="product-title cart-item-title">`).text(json.name));
+            $cartRightHand.append($(`<div id="cart-counts-${currentId}" class="cart-counts">`));
+            var $cartCounts = $cartRightHand.find("#cart-counts-"+currentId);
+            $cartCounts.append($(`<button id="decrease-count-${currentId}">`).text('-'));
+            $cartCounts.find("#decrease-count-"+currentId).click(function(){
                 incrementCount(-1, currentId, $thisProduct);
             });
-            $thisProduct.append($(`<span id="product-count-${currentId}">`).text(currentItem));
-            $thisProduct.append($(`<button id="increase-count-${currentId}">`).text('+'));
-            $thisProduct.find("#increase-count-"+currentId).click(function(){
+            $cartCounts.append($(`<span id="product-count-${currentId}" class="product-count">`).text(currentItem));
+            $cartCounts.append($(`<button id="increase-count-${currentId}">`).text('+'));
+            $cartCounts.find("#increase-count-"+currentId).click(function(){
                 incrementCount(+1, currentId, $thisProduct);
             });
-            $thisProduct.append($(`<button id="remove-from-cart-${currentId}">`).text('Remove'));
-            $thisProduct.find("#remove-from-cart-"+currentId).click(function(){
+            $cartRightHand.append($(`<button id="remove-from-cart-${currentId}" class="remove-from-cart">`).text('Remove'));
+            $cartRightHand.find("#remove-from-cart-"+currentId).click(function(){
                 localStorage.removeItem('products['+currentId+']');
                 $thisProduct.remove();
             })
